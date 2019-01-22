@@ -104,6 +104,10 @@ dynamic jsify(Object dartObject) {
     return dartObject;
   }
 
+  if (dartObject is Function) {
+    return allowInterop(dartObject);
+  }
+
   throw ArgumentError.value(dartObject, 'dartObject', 'Could not convert');
 }
 
