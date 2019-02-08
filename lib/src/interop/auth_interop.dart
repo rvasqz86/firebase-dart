@@ -22,6 +22,11 @@ abstract class AuthJsImpl {
           String email, String password);
   external UserJsImpl get currentUser;
 
+  external PromiseJsImpl<void> sendSignInLinkToEmail(email, actionCodeSettings);
+  external bool isSignInWithEmailLink(emailLink);
+  external PromiseJsImpl<UserCredentialJsImpl> signInWithEmailLink(
+      email, emailLink);
+
   @deprecated
   external PromiseJsImpl<List<String>> fetchProvidersForEmail(String email);
   external PromiseJsImpl<UserCredentialJsImpl> getRedirectResult();

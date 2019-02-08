@@ -9,6 +9,7 @@ import 'dart:html';
 import 'package:firebase/firebase.dart';
 import 'package:firebase/src/assets/assets.dart';
 import 'package:test/test.dart';
+import 'package:firebase/src/interop/auth_interop.dart';
 import 'test_util.dart';
 
 /// A nice util to include timing with print calls
@@ -393,6 +394,36 @@ void main() {
       }
     });
 
+    test('send sign in link', () async {
+      try {
+        ActionCodeSettings actionCodeSettings = ActionCodeSettings(
+            url: 'http://localhost:8080/', handleCodeInApp: true);
+        await authValue.sendSignInLinkToEmail(userEmail, actionCodeSettings);
+      } on FirebaseError catch (e) {
+        printException(e);
+        rethrow;
+      }
+    });
+
+    test('sign in with email link fails invalid email', () async {
+      try {
+        await authValue.signInWithEmailLink(userEmail, "");
+      } on FirebaseError catch (e) {
+        printException(e);
+        expect(e.message, "Invalid email link");
+      }
+    });
+
+    test('is sign in link', () async {
+      try {
+        await authValue.isSignInWithEmailLink(
+          userEmail,
+        );
+      } on FirebaseError catch (e) {
+        printException(e);
+        rethrow;
+      }
+    });
     test('link anonymous user with credential', () async {
       try {
         userCredential = await authValue.signInAnonymously();

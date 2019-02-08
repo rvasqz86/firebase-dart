@@ -241,6 +241,36 @@ class User extends UserInfo<firebase_interop.UserJsImpl> {
 class Auth extends JsObjectWrapper<AuthJsImpl> {
   static final _expando = Expando<Auth>();
 
+  //Sends a sign-in email link to the user with the specified email.
+  //The sign-in operation has to always be completed in the app unlike
+  //other out of band email actions (password reset and email verifications).
+  //This is because, at the end of the flow, the user is expected to be signed in and
+  //their Auth state persisted within the app.
+  //To complete sign in with the email link, call
+  //firebase.auth.Auth#signInWithEmailLink with the email address and the email link
+  //supplied in the email sent to the user.
+  Future<void> sendSignInLinkToEmail(email, actionCodeSettings) =>
+      handleThenable(jsObject.sendSignInLinkToEmail(email, actionCodeSettings));
+
+  //Checks if an incoming link is a sign-in with email link.
+  bool isSignInWithEmailLink(emailLink) =>
+      jsObject.isSignInWithEmailLink(emailLink);
+
+  //Asynchronously signs in using an email and sign-in email link. If no link is passed,
+  //the link is inferred from the current URL.
+  //Fails with an error if the email address is invalid or OTP in email link expires.
+  //Note: Confirm the link is a sign-in email link before calling this method
+  Future<UserCredential> signInWithEmailLink(email, emailLink) =>
+      handleThenable(jsObject.signInWithEmailLink(email, emailLink))
+          .then((u) => UserCredential.fromJsObject(u));
+
+  // /// The creation can fail, if the user with given [email] already exists
+  // /// or the password is not valid.
+  // Future<UserCredential> createUserWithEmailAndPassword(
+  //         String email, String password) =>
+  //     handleThenable(jsObject.createUserWithEmailAndPassword(email, password))
+  //         .then((u) => UserCredential.fromJsObject(u));
+
   /// App for this instance of auth service.
   App get app => App.getInstance(jsObject.app);
 
